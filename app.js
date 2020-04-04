@@ -1,11 +1,28 @@
-const http = require("http"); //import files into nodejs "global module"
-const routes = require("./routes"); // use ./ because is not global
+const express = require("express");
+const app = express();
 
-const server = http.createServer(routes)//createServer takes request listener as an argument or in this case routes from the routes.js file
+app.use(express.static("public"));
+app.set("view engine", "ejs");
 
-//we storage the server in a variable
-server.listen(3000); //listen for incoming request
+app.get("/", function (req, res) {
+    res.render("dogs")
+});
 
-//Streams in chuncks so the server do not have to wait, but there is problem with large files
-//Node handle this with buffers, constract that holds multiple chuncks
-//writeFyleSync: stop the ejecution of the next line until the file is created
+app.get("/fallInLove/:thing", function (req, res) {
+    let thing = req.params.thing;
+    res.render("love", { thingVar: thing });
+})
+
+app.get("/post", function (req, res) {
+    let posts = [
+        { title: "1 post", author: "Claudia" },
+        { title: "Cakes", author: "Julian" },
+        { title: "Ice Cream", author: "Cami" },
+    ];
+    res.render("posts", { posts: posts });
+})
+
+
+app.listen(3000, function () {
+    console.log("hi")
+})
